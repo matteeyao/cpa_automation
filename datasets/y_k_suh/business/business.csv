@@ -1,0 +1,4 @@
+business_id,business_name,cpa_firm_id,contact_name,contact_email,contact_phone,address,city,state,zip_code,created_at,updated_at
+BIZ001,Sunshine Car Wash,CPA001,John Doe,johndoe@sunshinecw.com,123-456-7890,123 Main St,Los Angeles,CA,90001,2025-03-19T08:00:00Z,2025-03-19T08:00:00Z
+BIZ002,Tech Innovators Inc.,CPA001,Jane Smith,janesmith@techinnovators.com,987-654-3210,456 Innovation Blvd,San Francisco,CA,94105,2025-03-19T08:30:00Z,2025-03-19T08:30:00Z
+BIZ003,Green Earth Landscaping,CPA001,Alice Johnson,alicej@greenearth.com,555-123-4567,789 Garden Ave,Portland,OR,97201,2025-03-19T09:00:00Z,2025-03-19T09:00:00Z

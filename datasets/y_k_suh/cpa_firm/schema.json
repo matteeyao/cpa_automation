@@ -1,0 +1,68 @@
+[
+  {
+    "name": "cpa_firm_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the CPA firm."
+  },
+  {
+    "name": "firm_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Name of the CPA firm."
+  },
+  {
+    "name": "contact_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Primary contact person for the CPA firm."
+  },
+  {
+    "name": "contact_email",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Email address of the CPA firm's primary contact."
+  },
+  {
+    "name": "contact_phone",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Phone number of the CPA firm's primary contact."
+  },
+  {
+    "name": "address",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Physical address of the CPA firm."
+  },
+  {
+    "name": "city",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "City where the CPA firm is located."
+  },
+  {
+    "name": "state",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "State where the CPA firm is located."
+  },
+  {
+    "name": "zip_code",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Zip code of the CPA firm."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when the CPA firm was added."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the CPA firm information was last updated."
+  }
+]

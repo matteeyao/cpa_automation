@@ -1,0 +1,86 @@
+[
+  {
+    "name": "employee_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the employee."
+  },
+  {
+    "name": "business_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "ID of the client company the employee works for."
+  },
+  {
+    "name": "first_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "First name of the employee."
+  },
+  {
+    "name": "last_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Last name of the employee."
+  },
+  {
+    "name": "email",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Email address of the employee."
+  },
+  {
+    "name": "phone_number",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Phone number of the employee."
+  },
+  {
+    "name": "position",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Job title of the employee."
+  },
+  {
+    "name": "hire_date",
+    "type": "DATE",
+    "mode": "REQUIRED",
+    "description": "Date the employee was hired."
+  },
+  {
+    "name": "termination_date",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "description": "Date the employee was terminated (if applicable)."
+  },
+  {
+    "name": "salary_type",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Salary payment type ('Hourly' or 'Salary')."
+  },
+  {
+    "name": "salary_amount",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "description": "Salary amount (hourly rate or annual salary)."
+  },
+  {
+    "name": "pay_frequency",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Payroll frequency ('Weekly', 'Bi-Weekly', 'Semi-Monthly', 'Monthly')."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when the employee record was added."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the employee record was last updated."
+  }
+]

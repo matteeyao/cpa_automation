@@ -1,0 +1,86 @@
+[
+  {
+    "name": "time_entry_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the time entry record."
+  },
+  {
+    "name": "employee_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "ID of the employee who logged the time entry."
+  },
+  {
+    "name": "business_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "ID of the client company the employee works for."
+  },
+  {
+    "name": "date",
+    "type": "DATE",
+    "mode": "REQUIRED",
+    "description": "Date of the time entry."
+  },
+  {
+    "name": "clock_in",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the employee clocked in."
+  },
+  {
+    "name": "clock_out",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the employee clocked out."
+  },
+  {
+    "name": "break_minutes",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Total break time (in minutes) deducted from work hours."
+  },
+  {
+    "name": "total_hours_worked",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "description": "Total hours worked after deducting break time."
+  },
+  {
+    "name": "pay_period",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Pay period associated with the time entry (e.g., '2025-03-01 to 2025-03-15')."
+  },
+  {
+    "name": "overtime_hours",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "description": "Overtime hours worked (if applicable)."
+  },
+  {
+    "name": "overtime_reason",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Reason for overtime (if required by the employer)."
+  },
+  {
+    "name": "notes",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Additional notes related to the time entry."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when the time entry was added."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the time entry was last updated."
+  }
+]

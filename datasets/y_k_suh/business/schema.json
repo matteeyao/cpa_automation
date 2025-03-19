@@ -1,0 +1,74 @@
+[
+  {
+    "name": "business_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the client company."
+  },
+  {
+    "name": "business_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Name of the client company."
+  },
+  {
+    "name": "cpa_firm_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "CPA firm managing this client company."
+  },
+  {
+    "name": "contact_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Primary contact person for the business."
+  },
+  {
+    "name": "contact_email",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Email address of the primary contact."
+  },
+  {
+    "name": "contact_phone",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Phone number of the primary contact."
+  },
+  {
+    "name": "address",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Business address."
+  },
+  {
+    "name": "city",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "City where the business is located."
+  },
+  {
+    "name": "state",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "State where the business is located."
+  },
+  {
+    "name": "zip_code",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Zip code of the business."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when the business was added."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the business information was last updated."
+  }
+]
