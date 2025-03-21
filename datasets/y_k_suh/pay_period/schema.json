@@ -8,19 +8,19 @@
   {
     "name": "start_date",
     "type": "DATE",
-    "mode": "NULLABLE",
+    "mode": "REQUIRED",
     "description": "Start date of the pay period."
   },
   {
     "name": "end_date",
     "type": "DATE",
-    "mode": "NULLABLE",
+    "mode": "REQUIRED",
     "description": "End date of the pay period."
   },
   {
     "name": "pay_date",
     "type": "DATE",
-    "mode": "NULLABLE",
+    "mode": "REQUIRED",
     "description": "Date employees are paid for this period."
   },
   {

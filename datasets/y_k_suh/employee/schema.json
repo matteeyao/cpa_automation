@@ -14,13 +14,13 @@
   {
     "name": "first_name",
     "type": "STRING",
-    "mode": "NULLABLE",
+    "mode": "REQUIRED",
     "description": "First name of the employee."
   },
   {
     "name": "last_name",
     "type": "STRING",
-    "mode": "NULLABLE",
+    "mode": "REQUIRED",
     "description": "Last name of the employee."
   },
   {
