@@ -1,22 +1,13 @@
 # CPA Automation Service
 
-## Quickstart
+## Project Directory Structure
 
-1. Create and activate a virtual environment:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
-
-2. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. Set up Google Cloud authentication (necessary Google Cloud SDK):
-
-```bash
-gcloud auth application-default login
+```txt
+/cpa_automation
+│── /terraform            # Terraform config files
+│   ├── main.tf           # Main Terraform Configuration
+│   ├── variables.tf      # Input Variables
+│── /db-scripts           # Database schema & SQL scripts
+│    ├── schema.sql       # SQL file we need to upload
+│── /datasets             # Schema and CSV files for BigQuery
 ```
