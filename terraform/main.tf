@@ -30,7 +30,6 @@ resource "google_sql_database_instance" "payroll_db" {
 
     ip_configuration {
       ipv4_enabled    = true
-      require_ssl     = true  # Enforce SSL connections
     }
   }
 
