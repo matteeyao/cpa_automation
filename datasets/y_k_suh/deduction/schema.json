@@ -1,0 +1,44 @@
+[
+  {
+    "name": "deduction_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the deduction record."
+  },
+  {
+    "name": "employee_id",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Employee ID associated with the deduction."
+  },
+  {
+    "name": "pay_period_id",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Pay period ID associated with the deduction."
+  },
+  {
+    "name": "deduction_type",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Type of deduction (e.g., 'Health Insurance', '401k')."
+  },
+  {
+    "name": "amount",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Deduction amount."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the deduction record was created."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the deduction record was last updated."
+  }
+]

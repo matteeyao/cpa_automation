@@ -1,12 +1,12 @@
-employee_id,business_id,first_name,last_name,email,phone_number,position,hire_date,termination_date,salary_type,salary_amount,pay_frequency,created_at,updated_at
-EMP001,BIZ001,Michael,Brown,michael.brown@sunshinecw.com,555-111-2222,Cashier,2023-06-15,,Hourly,15.5,Bi-Weekly,2025-03-19T11:00:00Z,2025-03-19T11:00:00Z
-EMP002,BIZ001,Sarah,Lee,sarah.lee@sunshinecw.com,555-222-3333,Car Wash Attendant,2024-02-10,,Hourly,14.0,Weekly,2025-03-19T11:10:00Z,2025-03-19T11:10:00Z
-EMP003,BIZ001,David,Martinez,david.martinez@sunshinecw.com,555-333-4444,Manager,2022-08-01,,Salary,55000.0,Monthly,2025-03-19T11:20:00Z,2025-03-19T11:20:00Z
-EMP004,BIZ001,Emily,Johnson,emily.johnson@sunshinecw.com,555-444-5555,Car Wash Attendant,2023-11-22,,Hourly,14.0,Weekly,2025-03-19T11:30:00Z,2025-03-19T11:30:00Z
-EMP005,BIZ002,James,Wilson,james.wilson@techinnovators.com,555-555-6666,Software Engineer,2021-09-15,,Salary,95000.0,Semi-Monthly,2025-03-19T11:40:00Z,2025-03-19T11:40:00Z
-EMP006,BIZ002,Olivia,Rodriguez,olivia.rodriguez@techinnovators.com,555-666-7777,Product Manager,2020-06-01,,Salary,120000.0,Monthly,2025-03-19T11:50:00Z,2025-03-19T11:50:00Z
-EMP007,BIZ002,Ethan,Anderson,ethan.anderson@techinnovators.com,555-777-8888,UX Designer,2023-01-15,,Salary,85000.0,Semi-Monthly,2025-03-19T12:00:00Z,2025-03-19T12:00:00Z
-EMP008,BIZ002,Sophia,Garcia,sophia.garcia@techinnovators.com,555-888-9999,HR Manager,2019-05-20,,Salary,80000.0,Monthly,2025-03-19T12:10:00Z,2025-03-19T12:10:00Z
-EMP009,BIZ003,Daniel,White,daniel.white@greenearth.com,555-999-0000,Landscaper,2022-04-10,,Hourly,18.0,Weekly,2025-03-19T12:20:00Z,2025-03-19T12:20:00Z
-EMP010,BIZ003,Ava,Harris,ava.harris@greenearth.com,555-000-1111,Project Manager,2021-12-05,,Salary,75000.0,Monthly,2025-03-19T12:30:00Z,2025-03-19T12:30:00Z
-EMP011,BIZ003,Lucas,King,lucas.king@greenearth.com,555-111-2223,Irrigation Technician,2023-07-18,,Hourly,20.0,Weekly,2025-03-19T12:40:00Z,2025-03-19T12:40:00Z
+employee_id,business_id,first_name,last_name,address,city,state,zip_code,email,phone_number,hire_date,termination_date,ssn,pay_rate,pay_type,department,job_title,created_at,updated_at
+1,1,Michael,Brown,123 Elm St,Los Angeles,CA,90001,michael.brown@sunshinecw.com,555-111-2222,2023-06-15,,123-45-6789,15.5,Hourly,Operations,Cashier,2025-03-19T11:00:00Z,2025-03-19T11:00:00Z
+2,1,Sarah,Lee,456 Oak St,Los Angeles,CA,90002,sarah.lee@sunshinecw.com,555-222-3333,2024-02-10,,234-56-7890,14.0,Hourly,Operations,Car Wash Attendant,2025-03-19T11:10:00Z,2025-03-19T11:10:00Z
+3,1,David,Martinez,789 Pine St,Los Angeles,CA,90003,david.martinez@sunshinecw.com,555-333-4444,2022-08-01,,345-67-8901,55000.0,Salary,Management,Manager,2025-03-19T11:20:00Z,2025-03-19T11:20:00Z
+4,1,Emily,Johnson,159 Maple St,Los Angeles,CA,90004,emily.johnson@sunshinecw.com,555-444-5555,2023-11-22,,456-78-9012,14.0,Hourly,Operations,Car Wash Attendant,2025-03-19T11:30:00Z,2025-03-19T11:30:00Z
+5,2,James,Wilson,753 Cedar Ave,San Francisco,CA,94105,james.wilson@techinnovators.com,555-555-6666,2021-09-15,,567-89-0123,95000.0,Salary,Engineering,Software Engineer,2025-03-19T11:40:00Z,2025-03-19T11:40:00Z
+6,2,Olivia,Rodriguez,357 Birch St,San Francisco,CA,94107,olivia.rodriguez@techinnovators.com,555-666-7777,2020-06-01,,678-90-1234,120000.0,Salary,Product Management,Product Manager,2025-03-19T11:50:00Z,2025-03-19T11:50:00Z
+7,2,Ethan,Anderson,951 Palm St,San Francisco,CA,94108,ethan.anderson@techinnovators.com,555-777-8888,2023-01-15,,789-01-2345,85000.0,Salary,Design,UX Designer,2025-03-19T12:00:00Z,2025-03-19T12:00:00Z
+8,2,Sophia,Garcia,654 Redwood St,San Francisco,CA,94109,sophia.garcia@techinnovators.com,555-888-9999,2019-05-20,,890-12-3456,80000.0,Salary,Human Resources,HR Manager,2025-03-19T12:10:00Z,2025-03-19T12:10:00Z
+9,3,Daniel,White,852 Willow St,Portland,OR,97201,daniel.white@greenearth.com,555-999-0000,2022-04-10,,901-23-4567,18.0,Hourly,Field Work,Landscaper,2025-03-19T12:20:00Z,2025-03-19T12:20:00Z
+10,3,Ava,Harris,369 Fir St,Portland,OR,97202,ava.harris@greenearth.com,555-000-1111,2021-12-05,,012-34-5678,75000.0,Salary,Project Management,Project Manager,2025-03-19T12:30:00Z,2025-03-19T12:30:00Z
+11,3,Lucas,King,741 Spruce St,Portland,OR,97203,lucas.king@greenearth.com,555-111-2223,2023-07-18,,123-45-6789,20.0,Hourly,Field Work,Irrigation Technician,2025-03-19T12:40:00Z,2025-03-19T12:40:00Z

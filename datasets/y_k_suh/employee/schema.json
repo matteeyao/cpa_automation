@@ -1,81 +1,111 @@
 [
   {
     "name": "employee_id",
-    "type": "STRING",
+    "type": "INTEGER",
     "mode": "REQUIRED",
     "description": "Unique identifier for the employee."
   },
   {
     "name": "business_id",
-    "type": "STRING",
-    "mode": "REQUIRED",
-    "description": "ID of the client company the employee works for."
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "ID of the business the employee works for."
   },
   {
     "name": "first_name",
     "type": "STRING",
-    "mode": "REQUIRED",
+    "mode": "NULLABLE",
     "description": "First name of the employee."
   },
   {
     "name": "last_name",
     "type": "STRING",
-    "mode": "REQUIRED",
+    "mode": "NULLABLE",
     "description": "Last name of the employee."
+  },
+  {
+    "name": "address",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employee's street address."
+  },
+  {
+    "name": "city",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employee's city."
+  },
+  {
+    "name": "state",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employee's state abbreviation."
+  },
+  {
+    "name": "zip_code",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employee's zip code."
   },
   {
     "name": "email",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Email address of the employee."
+    "description": "Employee's email address."
   },
   {
     "name": "phone_number",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Phone number of the employee."
-  },
-  {
-    "name": "position",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Job title of the employee."
+    "description": "Employee's phone number."
   },
   {
     "name": "hire_date",
     "type": "DATE",
-    "mode": "REQUIRED",
-    "description": "Date the employee was hired."
+    "mode": "NULLABLE",
+    "description": "Employee's hire date."
   },
   {
     "name": "termination_date",
     "type": "DATE",
     "mode": "NULLABLE",
-    "description": "Date the employee was terminated (if applicable)."
+    "description": "Employee's termination date (if applicable)."
   },
   {
-    "name": "salary_type",
+    "name": "ssn",
     "type": "STRING",
-    "mode": "REQUIRED",
-    "description": "Salary payment type ('Hourly' or 'Salary')."
-  },
-  {
-    "name": "salary_amount",
-    "type": "FLOAT",
     "mode": "NULLABLE",
-    "description": "Salary amount (hourly rate or annual salary)."
+    "description": "Employee's Social Security Number."
   },
   {
-    "name": "pay_frequency",
+    "name": "pay_rate",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Employee's hourly rate or annual salary."
+  },
+  {
+    "name": "pay_type",
     "type": "STRING",
-    "mode": "REQUIRED",
-    "description": "Payroll frequency ('Weekly', 'Bi-Weekly', 'Semi-Monthly', 'Monthly')."
+    "mode": "NULLABLE",
+    "description": "Employee's pay type (Hourly or Salary)."
+  },
+  {
+    "name": "department",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employee's department."
+  },
+  {
+    "name": "job_title",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employee's job title."
   },
   {
     "name": "created_at",
     "type": "TIMESTAMP",
-    "mode": "REQUIRED",
-    "description": "Timestamp when the employee record was added."
+    "mode": "NULLABLE",
+    "description": "Timestamp when the employee record was created."
   },
   {
     "name": "updated_at",
