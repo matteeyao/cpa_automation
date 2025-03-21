@@ -21,6 +21,10 @@ jobs:
         with:
           terraform_version: 1.11.2  # Ensure it's the correct version
 
+      # 🔹 Set the Database Password from GitHub Secrets
+      - name: Set Database Password Environment Variable
+        run: echo "TF_VAR_db_password=${{ secrets.DB_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Initialize Terraform
         run: |
           cd terraform
@@ -35,4 +39,4 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           cd terraform
-          terraform apply -auto-approve -var "db_password=${{ secrets.DB_PASSWORD }}"
+          terraform apply -auto-approve -var "db_password=$TF_VAR_db_password"
