@@ -1,7 +1,7 @@
 [
   {
     "name": "business_id",
-    "type": "STRING",
+    "type": "INTEGER",
     "mode": "REQUIRED",
     "description": "Unique identifier for the client company."
   },
@@ -13,62 +13,68 @@
   },
   {
     "name": "cpa_firm_id",
-    "type": "STRING",
+    "type": "INTEGER",
     "mode": "REQUIRED",
     "description": "CPA firm managing this client company."
-  },
-  {
-    "name": "contact_name",
-    "type": "STRING",
-    "mode": "REQUIRED",
-    "description": "Primary contact person for the business."
-  },
-  {
-    "name": "contact_email",
-    "type": "STRING",
-    "mode": "REQUIRED",
-    "description": "Email address of the primary contact."
-  },
-  {
-    "name": "contact_phone",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "Phone number of the primary contact."
   },
   {
     "name": "address",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Business address."
+    "description": "Business street address."
   },
   {
     "name": "city",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "City where the business is located."
+    "description": "Business city."
   },
   {
     "name": "state",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "State where the business is located."
+    "description": "Business state abbreviation."
   },
   {
     "name": "zip_code",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Zip code of the business."
+    "description": "Business zip code."
+  },
+  {
+    "name": "ein",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Employer Identification Number (EIN) of the business."
+  },
+  {
+    "name": "contact_name",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Name of the business contact person."
+  },
+  {
+    "name": "contact_phone",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Phone number of the business contact person."
+  },
+  {
+    "name": "contact_email",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Email address of the business contact person."
   },
   {
     "name": "created_at",
     "type": "TIMESTAMP",
-    "mode": "REQUIRED",
-    "description": "Timestamp when the business was added."
+    "mode": "NULLABLE",
+    "description": "Timestamp when the business record was created."
   },
   {
     "name": "updated_at",
     "type": "TIMESTAMP",
     "mode": "NULLABLE",
-    "description": "Timestamp when the business information was last updated."
+    "description": "Timestamp when the business record was last updated."
   }
 ]

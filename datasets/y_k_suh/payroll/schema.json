@@ -1,0 +1,68 @@
+[
+  {
+    "name": "payroll_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the payroll record."
+  },
+  {
+    "name": "employee_id",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Employee ID associated with the payroll record."
+  },
+  {
+    "name": "pay_period_id",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Pay period ID associated with the payroll record."
+  },
+  {
+    "name": "hours_worked_regular",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Regular hours worked during the pay period."
+  },
+  {
+    "name": "hours_worked_overtime",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Overtime hours worked during the pay period."
+  },
+  {
+    "name": "gross_pay",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Gross pay for the pay period."
+  },
+  {
+    "name": "total_deductions",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Total deductions for the pay period."
+  },
+  {
+    "name": "total_taxes",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Total taxes for the pay period."
+  },
+  {
+    "name": "net_pay",
+    "type": "NUMERIC",
+    "mode": "NULLABLE",
+    "description": "Net pay for the pay period."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the payroll record was created."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the payroll record was last updated."
+  }
+]

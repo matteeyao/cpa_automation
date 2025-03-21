@@ -2,4 +2,6 @@ project_id,dataset_id,table_id,description
 cpa-automation-454219,y_k_suh,cpa_firms,"Stores information about CPA firms, including contact details and address."
 cpa-automation-454219,y_k_suh,businesses,"Stores information about client companies managed by CPA firms, including business contact details."
 cpa-automation-454219,y_k_suh,employees,"Stores employee details such as name, contact info, job title, salary type, and payroll frequency."
-cpa-automation-454219,y_k_suh,time_entries,"Tracks employee work hours, including clock-in/out times, break minutes, total hours worked, and pay period."
+cpa-automation-454219,y_k_suh,pay_period,"Stores information about pay periods, including start and end dates."
+cpa-automation-454219,y_k_suh,payroll,"Stores individual payroll records, including employee ID, pay period ID, hours worked, and pay details."
+cpa-automation-454219,y_k_suh,deductions,"Stores information about employee deductions, including deduction type and amount."

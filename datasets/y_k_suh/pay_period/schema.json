@@ -1,0 +1,44 @@
+[
+  {
+    "name": "pay_period_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the pay period."
+  },
+  {
+    "name": "start_date",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "description": "Start date of the pay period."
+  },
+  {
+    "name": "end_date",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "description": "End date of the pay period."
+  },
+  {
+    "name": "pay_date",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "description": "Date employees are paid for this period."
+  },
+  {
+    "name": "description",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Description of the pay period (e.g., 'Weekly 2023-10-23')."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the pay period record was created."
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Timestamp when the pay period record was last updated."
+  }
+]

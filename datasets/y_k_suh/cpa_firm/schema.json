@@ -1,7 +1,7 @@
 [
   {
     "name": "cpa_firm_id",
-    "type": "STRING",
+    "type": "INTEGER",
     "mode": "REQUIRED",
     "description": "Unique identifier for the CPA firm."
   },
