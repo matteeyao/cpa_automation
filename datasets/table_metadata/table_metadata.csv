@@ -5,3 +5,4 @@ cpa-automation-454219,y_k_suh,employees,"Stores employee details such as name, c
 cpa-automation-454219,y_k_suh,pay_period,"Stores information about pay periods, including start and end dates."
 cpa-automation-454219,y_k_suh,payroll,"Stores individual payroll records, including employee ID, pay period ID, hours worked, and pay details."
 cpa-automation-454219,y_k_suh,deductions,"Stores information about employee deductions, including deduction type and amount."
+cpa-automation-454219,y_k_suh,taxes,"Stores tax details associated with each payroll record, including tax type, jurisdiction, and amount."

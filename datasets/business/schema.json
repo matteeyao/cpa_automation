@@ -1,51 +1,51 @@
 [
   {
-    "name": "business_id",
+    "name": "id",
     "type": "INTEGER",
     "mode": "REQUIRED",
-    "description": "Unique identifier for the client company."
-  },
-  {
-    "name": "business_name",
-    "type": "STRING",
-    "mode": "REQUIRED",
-    "description": "Name of the client company."
+    "description": "Primary key: Unique identifier for the business."
   },
   {
     "name": "cpa_firm_id",
     "type": "INTEGER",
     "mode": "REQUIRED",
-    "description": "CPA firm managing this client company."
+    "description": "Foreign key: ID of the CPA firm managing this business."
+  },
+  {
+    "name": "business_name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Name of the business."
   },
   {
     "name": "address",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Business street address."
+    "description": "Street address of the business."
   },
   {
     "name": "city",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Business city."
+    "description": "City where the business is located."
   },
   {
     "name": "state",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Business state abbreviation."
+    "description": "Two-letter state abbreviation."
   },
   {
     "name": "zip_code",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Business zip code."
+    "description": "ZIP code of the business."
   },
   {
     "name": "ein",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Employer Identification Number (EIN) of the business."
+    "description": "Unique Employer Identification Number of the business."
   },
   {
     "name": "contact_name",

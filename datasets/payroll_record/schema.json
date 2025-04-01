@@ -1,21 +1,21 @@
 [
   {
-    "name": "payroll_id",
+    "name": "id",
     "type": "INTEGER",
     "mode": "REQUIRED",
-    "description": "Unique identifier for the payroll record."
+    "description": "Primary key: Unique identifier for the payroll record."
   },
   {
     "name": "employee_id",
     "type": "INTEGER",
     "mode": "NULLABLE",
-    "description": "Employee ID associated with the payroll record."
+    "description": "Foreign key: Employee ID associated with this payroll record."
   },
   {
     "name": "pay_period_id",
     "type": "INTEGER",
     "mode": "NULLABLE",
-    "description": "Pay period ID associated with the payroll record."
+    "description": "Foreign key: Pay period ID associated with this payroll record."
   },
   {
     "name": "hours_worked_regular",

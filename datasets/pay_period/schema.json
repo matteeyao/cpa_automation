@@ -1,9 +1,15 @@
 [
   {
-    "name": "pay_period_id",
+    "name": "id",
     "type": "INTEGER",
     "mode": "REQUIRED",
-    "description": "Unique identifier for the pay period."
+    "description": "Primary key: Unique identifier for the pay period."
+  },
+  {
+    "name": "business_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key: ID of the business associated with this pay period."
   },
   {
     "name": "start_date",
@@ -27,7 +33,7 @@
     "name": "description",
     "type": "STRING",
     "mode": "NULLABLE",
-    "description": "Description of the pay period (e.g., 'Weekly 2023-10-23')."
+    "description": "Optional description of the pay period (e.g., 'Weekly 2023-10-23')."
   },
   {
     "name": "created_at",

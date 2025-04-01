@@ -1,4 +1,4 @@
-business_id,business_name,cpa_firm_id,address,city,state,zip_code,ein,contact_name,contact_phone,contact_email,created_at,updated_at
+id,business_name,cpa_firm_id,address,city,state,zip_code,ein,contact_name,contact_phone,contact_email,created_at,updated_at
 1,Sunshine Car Wash,1,123 Main St,Los Angeles,CA,90001,12-3456789,John Doe,123-456-7890,johndoe@sunshinecw.com,2025-03-19T08:00:00Z,2025-03-19T08:00:00Z
 2,Tech Innovators Inc.,1,456 Innovation Blvd,San Francisco,CA,94105,98-7654321,Jane Smith,987-654-3210,janesmith@techinnovators.com,2025-03-19T08:30:00Z,2025-03-19T08:30:00Z
 3,Green Earth Landscaping,1,789 Garden Ave,Portland,OR,97201,11-2233445,Alice Johnson,555-123-4567,alicej@greenearth.com,2025-03-19T09:00:00Z,2025-03-19T09:00:00Z
