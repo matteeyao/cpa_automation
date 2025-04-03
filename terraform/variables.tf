@@ -1,17 +1,17 @@
 variable "project_id" {
   type        = string
-  default     = "cpa-automation-454219"
-  description = "Google Cloud Project ID"
+  default     = "sputter-455519"
+  description = "The GCP project ID"
 }
 
 variable "region" {
+  description = "The GCP region"
   type        = string
   default     = "us-central1"
-  description = "GCP region for deployment"
 }
 
 variable "db_password" {
+  description = "PostgreSQL user password"
   type        = string
   sensitive   = true
-  description = "Database admin password"
 }
