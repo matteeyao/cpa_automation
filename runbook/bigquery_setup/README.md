@@ -1,4 +1,4 @@
-# Set up BigQuery
+# ~~Set up BigQuery~~
 
 ## Set Up BigQuery dataset
 
