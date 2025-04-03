@@ -1,10 +1,12 @@
-# Uploading and Running `schema.sql` in Cloud SQL (PostgreSQL)
+# Setting up Cloud SQL PostgreSQL Instance
+
+## Uploading and Running `schema.sql` in Cloud SQL PostgreSQL Instance
 
 > **NOTE:**
 >
 > Run the `Deploy Cloud SQL` workflow within GitHub Actions
 
-## Step 1: Install the Cloud SQL Proxy
+### Step 1: Install the Cloud SQL Proxy
 
 * The Cloud SQL Proxy allows you to connect to your Cloud SQL instance securely from your local machine. Let's install it:
 
@@ -14,7 +16,7 @@
 docker pull gcr.io/cloudsql-docker/gce-proxy:latest
 ```
 
-## Step 2: Start the Cloud SQL Proxy
+### Step 2: Start the Cloud SQL Proxy
 
 * Now that you have the Cloud SQL Proxy installed, let's start it to connect to your instance:
 
@@ -49,7 +51,7 @@ docker run -d \
 
   3. The proxy will start and you should see output indicating that it's ready to receive connections.
 
-## Step 3: Connect to Your Database Using psql
+### Step 3: Connect to Your Database Using psql
 
 Now that the Cloud SQL Proxy is running, you can connect to your PostgreSQL database using the `psql` client:
 
@@ -87,7 +89,7 @@ SELECT current_database();
 
 Now you're connected to your Cloud SQL PostgreSQL instance and ready to apply your schema
 
-## Step 4: Apply the Schema to Database
+### Step 4: Apply the Schema to Database
 
 Now that you're connected to your database with psql, you can apply your schema:
 
@@ -146,7 +148,7 @@ psql -h localhost -p 5432 -U postgres -d sputter-database
 
 Your schema has now been successfully applied to your Cloud SQL PostgreSQL instance!
 
-## Step 5: Step 5: Verify the Schema Details
+### Step 5: Step 5: Verify the Schema Details
 
 Now that you've applied the schema, let's verify that everything was created correctly and explore the structure in more detail:
 
@@ -235,7 +237,7 @@ SELECT id, firm_name, created_at, updated_at FROM cpa_firms;
 \q
 ```
 
-## Step 6: Secure your Database
+### Step 6: Secure your Database
 
 1. Update the default user password:
 
@@ -259,31 +261,31 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO payroll_app;
 
 3. Enable SSL for database connections in your application
 
-## Step 7: Set Up Backups and Maintenance
+### Step 7: Set Up Backups and Maintenance
 
 1. Verify that automated backups are enabled in the Google Cloud Console for your Cloud SQL instance.
 
 2. Set up a maintenance window for your database during off-peak hours.
 
-## Step 8: Monitoring and Logging
+### Step 8: Monitoring and Logging
 
 1. Set up Cloud Monitoring for your Cloud SQL instance to track metrics like CPU usage, disk space, and active connections
 
 2. Enable detailed query logging for debugging purposes (but be mindful of performance impact in production)
 
-## Step 9: Update Your Application Configuration
+### Step 9: Update Your Application Configuration
 
 1. Update your application's database connection settings to use the Cloud SQL instance
 
 2. If you're using the Cloud SQL Proxy in production, set it up on your application servers
 
-## Step 10: Testing
+### Step 10: Testing
 
 1. Perform thorough testing of your application with the new Cloud SQL database
 
 2. Test database performance under expected load
 
-## Step 11: Documentation
+### Step 11: Documentation
 
 1. Document the database schema, including any specific design decisions
 
@@ -296,3 +298,216 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO payroll_app;
 2. Update any scripts or CI/CD pipelines to use the new Cloud SQL instance
 
 Remember to always follow security best practices, keep your database and application updated, and regularly review and optimize your database performance
+
+## Upload Datasets into Cloud SQL PostgreSQL Database
+
+### Step 1: Prepare the CSV Files
+
+  1. Ensure all your CSV files are properly formatted and match the schema structure
+
+  2. Check that date formats are consistent with PostgreSQL expectations
+
+  3. Make sure the files are accessible from your local machine where you're running the Cloud SQL Proxy
+
+### Step 2: Run the import script:
+
+* From the project directory run:
+
+```bash
+psql -h localhost -p 5432 -U postgres -d sputter-database -f db-scripts/import_datasets.sql
+```
+
+### Step 3: Query and Verify Your Data
+
+Now that you've successfully imported all your data into the Cloud SQL PostgreSQL database, let's run some queries to verify that everything is working correctly and explore the data:
+
+1. First, let's check how many records we have in each table:
+
+```sql
+SELECT 'cpa_firms' AS table_name, COUNT(*) AS record_count FROM cpa_firms
+UNION ALL
+SELECT 'businesses', COUNT(*) FROM businesses
+UNION ALL
+SELECT 'employees', COUNT(*) FROM employees
+UNION ALL
+SELECT 'pay_periods', COUNT(*) FROM pay_periods
+UNION ALL
+SELECT 'payroll_records', COUNT(*) FROM payroll_records
+UNION ALL
+SELECT 'deductions', COUNT(*) FROM deductions
+UNION ALL
+SELECT 'taxes', COUNT(*) FROM taxes
+ORDER BY table_name;
+```
+
+2. Let's examine the relationship between businesses and their CPA firm:
+
+```sql
+SELECT b.id, b.business_name, c.firm_name, b.contact_name, b.contact_email
+FROM businesses b
+JOIN cpa_firms c ON b.cpa_firm_id = c.id;
+```
+
+3. Check employee information for each business:
+
+```sql
+SELECT e.id, e.first_name, e.last_name, b.business_name, e.pay_rate, e.pay_type, e.job_title
+FROM employees e
+JOIN businesses b ON e.business_id = b.id
+ORDER BY b.business_name, e.last_name;
+```
+
+4. View upcoming pay periods:
+
+```sql
+SELECT p.id, b.business_name, p.start_date, p.end_date, p.pay_date, p.description
+FROM pay_periods p
+JOIN businesses b ON p.business_id = b.id
+WHERE p.pay_date > '2025-04-03'
+ORDER BY p.pay_date;
+```
+
+5. Analyze payroll data for a specific business:
+
+```sql
+SELECT pr.id, e.first_name, e.last_name, pp.start_date, pp.end_date, 
+       pr.hours_worked_regular, pr.hours_worked_overtime, 
+       pr.gross_pay, pr.total_deductions, pr.total_taxes, pr.net_pay
+FROM payroll_records pr
+JOIN employees e ON pr.employee_id = e.id
+JOIN pay_periods pp ON pr.pay_period_id = pp.id
+JOIN businesses b ON e.business_id = b.id
+WHERE b.business_name = 'Sunshine Car Wash'
+ORDER BY pp.start_date, e.last_name;
+```
+
+6. Check the tax breakdown for a specific payroll record:
+
+```sql
+SELECT pr.id AS payroll_id, e.first_name, e.last_name, 
+       t.tax_type, t.jurisdiction, t.amount
+FROM taxes t
+JOIN payroll_records pr ON t.payroll_record_id = pr.id
+JOIN employees e ON pr.employee_id = e.id
+WHERE pr.id = 1
+ORDER BY t.amount DESC;
+```
+
+7. View deductions for a specific employee:
+
+```sql
+SELECT e.first_name, e.last_name, pp.start_date, pp.end_date,
+       d.deduction_type, d.amount
+FROM deductions d
+JOIN payroll_records pr ON d.payroll_record_id = pr.id
+JOIN employees e ON pr.employee_id = e.id
+JOIN pay_periods pp ON pr.pay_period_id = pp.id
+WHERE e.id = 3
+ORDER BY pp.start_date, d.deduction_type;
+```
+
+8. Calculate total payroll by business:
+
+```sql
+SELECT b.business_name, 
+       SUM(pr.gross_pay) AS total_gross_pay,
+       SUM(pr.total_deductions) AS total_deductions,
+       SUM(pr.total_taxes) AS total_taxes,
+       SUM(pr.net_pay) AS total_net_pay
+FROM payroll_records pr
+JOIN employees e ON pr.employee_id = e.id
+JOIN businesses b ON e.business_id = b.id
+GROUP BY b.business_name
+ORDER BY b.business_name;
+```
+
+These queries will help you verify that your data was imported correctly and give you insights into the payroll information stored in your database.
+
+### Step 4: Analyze Your Payroll Data
+
+* Now that your data is successfully imported into your Cloud SQL PostgreSQL database, let's run some analytical queries to gain insights from your payroll data.
+
+#### Upcoming Pay Periods
+
+* Since today is April 3, 2025, let's identify all upcoming pay periods:
+
+```sql
+SELECT p.id, b.business_name, p.start_date, p.end_date, p.pay_date, p.description
+FROM pay_periods p
+JOIN businesses b ON p.business_id = b.id
+WHERE p.pay_date > '2025-04-03'
+ORDER BY p.pay_date;
+```
+
+* This will show all pay periods with pay dates after today, which includes:
+
+  * Monthly pay period for Tech Innovators Inc. (pay date: April 5, 2025)
+
+  * Semi-Monthly pay period for Green Earth Landscaping (pay date: April 20, 2025)
+
+  * Bi-Weekly pay period for Sunshine Car Wash (pay date: May 4, 2025)
+
+  * And several more through June 20, 2025
+
+#### Payroll Summary by Business
+
+* To get a high-level view of your payroll expenses by business:
+
+```sql
+SELECT b.business_name, 
+       COUNT(DISTINCT pr.id) AS payroll_count,
+       SUM(pr.gross_pay) AS total_gross_pay,
+       SUM(pr.total_deductions) AS total_deductions,
+       SUM(pr.total_taxes) AS total_taxes,
+       SUM(pr.net_pay) AS total_net_pay
+FROM payroll_records pr
+JOIN employees e ON pr.employee_id = e.id
+JOIN businesses b ON e.business_id = b.id
+GROUP BY b.business_name
+ORDER BY total_gross_pay DESC;
+```
+
+#### Tax Distribution Analysis
+
+* To understand how taxes are distributed across different jurisdictions:
+
+```sql
+SELECT t.jurisdiction, t.tax_type, 
+       COUNT(*) AS occurrence_count,
+       SUM(t.amount) AS total_amount,
+       AVG(t.amount) AS average_amount
+FROM taxes t
+GROUP BY t.jurisdiction, t.tax_type
+ORDER BY total_amount DESC;
+```
+
+#### Employee Earnings Report
+
+* To see how much each employee has earned year-to-date:
+
+```sql
+SELECT e.id, e.first_name, e.last_name, b.business_name,
+       SUM(pr.gross_pay) AS ytd_gross_pay,
+       SUM(pr.net_pay) AS ytd_net_pay,
+       SUM(pr.hours_worked_regular) AS regular_hours,
+       SUM(pr.hours_worked_overtime) AS overtime_hours
+FROM employees e
+JOIN businesses b ON e.business_id = b.id
+JOIN payroll_records pr ON e.id = pr.employee_id
+GROUP BY e.id, e.first_name, e.last_name, b.business_name
+ORDER BY ytd_gross_pay DESC;
+```
+
+#### Deduction Analysis
+
+* To analyze what types of deductions are most common:
+
+```sql
+SELECT d.deduction_type, 
+       COUNT(*) AS occurrence_count,
+       SUM(d.amount) AS total_amount,
+       AVG(d.amount) AS average_amount
+FROM deductions d
+GROUP BY d.deduction_type
+ORDER BY total_amount DESC;
+```
