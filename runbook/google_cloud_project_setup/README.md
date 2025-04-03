@@ -152,7 +152,7 @@ openssl rand -base64 16
 
 * These secrets will be securely stored in GitHub and will be available to your GitHub Actions workflow when it runs. The workflow will use these secrets to authenticate with Google Cloud and set the password for your PostgreSQL database.
 
-## Step 7
+## Step 7: Trigger the GitHub Actions Workflow
 
 * Now that you have set up your repository with the necessary files and secrets, you can manually trigger the GitHub Actions workflow to deploy your Cloud SQL PostgreSQL instance:
 
@@ -193,3 +193,51 @@ openssl rand -base64 16
   11. Once the workflow completes successfully, you should see green checkmarks next to each step
 
 * The outputs from the Terraform apply step will show the connection name and database name for your newly created Cloud SQL instance
+
+## Step 8: Verify the Cloud SQL Instance
+
+After your GitHub Actions workflow has completed successfully, you should verify that your Cloud SQL PostgreSQL instance was created correctly:
+
+1. Open the Google Cloud Console in your web browser
+
+2. Make sure you're in the correct project (`sputter-455519`)
+
+3. Navigate to the SQL instances page:
+
+  * Click on the navigation menu (hamburger icon) in the top-left corner
+
+  * Scroll down and click on "SQL" under the "Databases" section
+
+4. You should see your newly created PostgreSQL instance named "postgres-instance" in the list.
+
+5. Click on the instance name to view its details, including:
+
+  * Instance ID
+
+  * Connection name
+
+  * PostgreSQL version
+
+  * Region
+
+  * Machine type
+
+6. Verify the database was created by clicking on the "Databases" tab in the left sidebar of the instance details page. You should see "sputter-database" listed
+
+7. You can also verify the user was created by clicking on the "Users" tab. You should see the "postgres" user listed
+
+8. You can also verify the deployment using the gcloud CLI:
+
+```zsh
+# List all Cloud SQL instances in your project
+gcloud sql instances list
+
+# Get detailed information about your instance
+gcloud sql instances describe postgres-instance
+
+# List databases in your instance
+gcloud sql databases list --instance=postgres-instance
+
+# List users in your instance
+gcloud sql users list --instance=postgres-instance
+```
