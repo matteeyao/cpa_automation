@@ -1,35 +1,23 @@
-resource "google_project_service" "datastream" {
-  project            = var.project_id
-  service            = "datastream.googleapis.com"
-  disable_on_destroy = false
+locals {
+  required_apis = {
+    datastream           = "datastream.googleapis.com"
+    bigquery             = "bigquery.googleapis.com"
+    cloudsql             = "sqladmin.googleapis.com"
+    compute              = "compute.googleapis.com"
+    cloudresourcemanager = "cloudresourcemanager.googleapis.com"
+    servicenetworking    = "servicenetworking.googleapis.com"
+  }
 }
 
-resource "google_project_service" "bigquery" {
-  project            = var.project_id
-  service            = "bigquery.googleapis.com"
-  disable_on_destroy = false
-}
+resource "google_project_service" "apis" {
+  for_each = local.required_apis
 
-resource "google_project_service" "cloudsql" {
   project            = var.project_id
-  service            = "sqladmin.googleapis.com"
+  service            = each.value
   disable_on_destroy = false
-}
 
-resource "google_project_service" "compute" {
-  project            = var.project_id
-  service            = "compute.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "cloudresourcemanager" {
-  project            = var.project_id
-  service            = "cloudresourcemanager.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "servicenetworking" {
-  project            = var.project_id
-  service            = "servicenetworking.googleapis.com"
-  disable_on_destroy = false
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
 }

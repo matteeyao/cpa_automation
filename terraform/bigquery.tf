@@ -1,60 +1,62 @@
 resource "google_bigquery_dataset" "payroll_dataset" {
-  dataset_id    = "payroll_analytics"
+  dataset_id    = local.bigquery_dataset_id
   friendly_name = "Payroll Analytics Dataset"
   description   = "Dataset for payroll analytics data"
   location      = var.region
 
+  labels = local.common_tags
+
   depends_on = [
-    google_project_service.bigquery
+    google_project_service.apis["bigquery"]
   ]
 }
 
-resource "google_bigquery_table" "cpa_firms" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "cpa_firms"
-  schema     = file("${path.module}/schemas/cpa_firms.json")
+locals {
+  bigquery_tables = {
+    cpa_firms = {
+      schema = "cpa_firms.json"
+    },
+    businesses = {
+      schema = "businesses.json"
+    },
+    employees = {
+      schema = "employees.json"
+    },
+    pay_periods = {
+      schema = "pay_periods.json"
+    },
+    payroll_records = {
+      schema = "payroll_records.json"
+    },
+    deductions = {
+      schema = "deductions.json"
+    },
+    taxes = {
+      schema = "taxes.json"
+    }
+  }
 }
 
-resource "google_bigquery_table" "businesses" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "businesses"
-  schema     = file("${path.module}/schemas/businesses.json")
-}
+resource "google_bigquery_table" "tables" {
+  for_each = local.bigquery_tables
 
-resource "google_bigquery_table" "employees" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "employees"
-  schema     = file("${path.module}/schemas/employees.json")
-}
+  dataset_id          = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id            = each.key
+  schema              = file("${path.module}/schemas/${each.value.schema}")
+  deletion_protection = false
 
-resource "google_bigquery_table" "pay_periods" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "pay_periods"
-  schema     = file("${path.module}/schemas/pay_periods.json")
-}
-
-resource "google_bigquery_table" "payroll_records" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "payroll_records"
-  schema     = file("${path.module}/schemas/payroll_records.json")
-}
-
-resource "google_bigquery_table" "deductions" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "deductions"
-  schema     = file("${path.module}/schemas/deductions.json")
-}
-
-resource "google_bigquery_table" "taxes" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "taxes"
-  schema     = file("${path.module}/schemas/taxes.json")
+  labels = local.common_tags
 }
 
 # BigQuery Views for Analytics
 resource "google_bigquery_table" "employee_payroll_summary" {
-  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
-  table_id   = "employee_payroll_summary"
+  dataset_id          = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id            = "employee_payroll_summary"
+  deletion_protection = false
+
+  depends_on = [
+    google_bigquery_table.tables
+  ]
 
   view {
     query          = <<EOF
@@ -74,4 +76,6 @@ resource "google_bigquery_table" "employee_payroll_summary" {
     EOF
     use_legacy_sql = false
   }
+
+  labels = local.common_tags
 }

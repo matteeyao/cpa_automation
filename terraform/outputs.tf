@@ -22,3 +22,23 @@ output "postgres_private_ip" {
   value       = google_sql_database_instance.postgres.private_ip_address
   description = "Private IP address of the Cloud SQL instance"
 }
+
+output "vpc_network_name" {
+  value       = google_compute_network.vpc.name
+  description = "The name of the VPC network"
+}
+
+output "environment" {
+  value       = var.environment
+  description = "The environment name"
+}
+
+output "project_id" {
+  value       = var.project_id
+  description = "The GCP project ID"
+}
+
+output "region" {
+  value       = var.region
+  description = "The GCP region"
+}

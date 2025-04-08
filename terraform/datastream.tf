@@ -1,7 +1,7 @@
 resource "google_datastream_connection_profile" "postgres_profile" {
-  display_name          = "postgres-connection-profile"
+  display_name          = "${local.name_prefix}-postgres-profile"
   location              = var.region
-  connection_profile_id = "postgres-profile"
+  connection_profile_id = "${local.name_prefix}-postgres-profile"
 
   postgresql_profile {
     hostname = google_sql_database_instance.postgres.private_ip_address
@@ -12,33 +12,42 @@ resource "google_datastream_connection_profile" "postgres_profile" {
   }
 
   private_connectivity {
-    private_connection = google_service_networking_connection.private_vpc_connection.id
+    private_connection = google_datastream_private_connection.private_connection.id
   }
 
   depends_on = [
-    google_project_service.datastream,
-    google_service_networking_connection.private_vpc_connection
+    google_project_service.apis["datastream"],
+    google_service_networking_connection.private_vpc_connection,
+    google_datastream_private_connection.private_connection,
+    google_sql_database_instance.postgres,
+    google_sql_database.database,
+    google_sql_user.user
   ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # BigQuery Connection Profile
 resource "google_datastream_connection_profile" "bigquery_profile" {
-  display_name          = "bigquery-connection-profile"
+  display_name          = "${local.name_prefix}-bigquery-profile"
   location              = var.region
-  connection_profile_id = "bigquery-profile"
+  connection_profile_id = "${local.name_prefix}-bigquery-profile"
 
   bigquery_profile {}
 
   depends_on = [
-    google_project_service.datastream
+    google_project_service.apis["datastream"]
   ]
 }
 
 # Datastream Stream
 resource "google_datastream_stream" "postgres_to_bigquery" {
-  display_name = "postgres-to-bigquery-stream"
-  location     = var.region
-  stream_id    = "postgres-to-bigquery"
+  display_name  = "${local.name_prefix}-stream"
+  location      = var.region
+  stream_id     = local.datastream_name
+  desired_state = "RUNNING"
 
   source_config {
     source_connection_profile = google_datastream_connection_profile.postgres_profile.id
@@ -46,30 +55,15 @@ resource "google_datastream_stream" "postgres_to_bigquery" {
       include_objects {
         postgresql_schemas {
           schema = "public"
-          postgresql_tables {
-            table = "cpa_firms"
-          }
-          postgresql_tables {
-            table = "businesses"
-          }
-          postgresql_tables {
-            table = "employees"
-          }
-          postgresql_tables {
-            table = "pay_periods"
-          }
-          postgresql_tables {
-            table = "payroll_records"
-          }
-          postgresql_tables {
-            table = "deductions"
-          }
-          postgresql_tables {
-            table = "taxes"
+          dynamic "postgresql_tables" {
+            for_each = local.datastream_tables
+            content {
+              table = postgresql_tables.value
+            }
           }
         }
       }
-      max_concurrent_backfill_tasks = 1
+      max_concurrent_backfill_tasks = 12
       publication                   = "datastream_publication"
       replication_slot              = "datastream_replication_slot"
     }
@@ -90,7 +84,8 @@ resource "google_datastream_stream" "postgres_to_bigquery" {
   backfill_all {}
 
   depends_on = [
-    google_project_service.datastream,
+    google_datastream_connection_profile.postgres_profile,
+    google_datastream_connection_profile.bigquery_profile,
     google_bigquery_dataset.payroll_dataset
   ]
 }

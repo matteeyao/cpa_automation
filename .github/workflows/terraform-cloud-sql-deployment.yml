@@ -2,47 +2,64 @@ name: "Terraform Infrastructure Deployment"
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      action:
+        description: "Action to perform"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 
-# Prevent concurrent runs of the same workflow
+# Prevent concurrent runs
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Reusable environment configuration
 env:
   TF_LOG: INFO
   TF_LOG_PATH: terraform.log
+  TF_VAR_environment: ${{ github.event.inputs.environment || 'dev' }}
+  WORKING_DIR: ./terraform
+  STATE_BUCKET: terraform-state-${{ github.repository_owner }}
+  # Common Terraform variables
+  TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+  # Common environment variables for all steps
+  GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+  TF_IN_AUTOMATION: "true"
 
 jobs:
   terraform:
     name: "Deploy Infrastructure"
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        working-directory: ./terraform
+        working-directory: ${{ env.WORKING_DIR }}
 
     steps:
+      # Checkout repository
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.11.2
 
-      - name: Configure Terraform Backend
-        run: |
-          cat > backend.tf << EOF
-          terraform {
-            backend "gcs" {
-              bucket = "terraform-state-${GITHUB_REPOSITORY_OWNER}"
-              prefix = "terraform/state"
-            }
-          }
-          EOF
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-
+      # Configure GCP authentication
       - name: Authenticate to Google Cloud
         id: auth
         run: |
@@ -51,109 +68,130 @@ jobs:
           export PROJECT_ID=$(cat /tmp/gcp-key.json | jq -r '.project_id')
           gcloud config set project $PROJECT_ID
           echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
+      # Setup Terraform backend
+      - name: Configure Terraform Backend
+        run: |
+          cat > backend.tf << EOF
+          terraform {
+            backend "gcs" {
+              bucket = "${STATE_BUCKET}"
+              prefix = "terraform/state/${TF_VAR_environment}"
+            }
+          }
+          EOF
+
+      # Setup state bucket
       - name: Setup State Bucket
         run: |
-          gsutil ls -b gs://terraform-state-${GITHUB_REPOSITORY_OWNER} || \
-          gsutil mb -l us-central1 gs://terraform-state-${GITHUB_REPOSITORY_OWNER}
-          gsutil versioning set on gs://terraform-state-${GITHUB_REPOSITORY_OWNER}
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          gsutil ls -b gs://${STATE_BUCKET} || \
+          gsutil mb -l us-central1 gs://${STATE_BUCKET}
+          gsutil versioning set on gs://${STATE_BUCKET}
 
+      # Clean stale state locks
+      - name: Clean Stale State Locks
+        run: |
+          echo "Cleaning up any stale state locks..."
+          gsutil rm gs://${STATE_BUCKET}/terraform/state/${TF_VAR_environment}/*.tflock || true
+
+      # Initialize Terraform
       - name: Terraform Init
         run: terraform init
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
+      # Select workspace
       - name: Select Workspace
         run: |
-          terraform workspace select default || terraform workspace new default
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          terraform workspace select ${TF_VAR_environment} || terraform workspace new ${TF_VAR_environment}
 
-      - name: Import Existing Resources
-        run: |
-          # Function to handle imports with retries
-          import_with_retry() {
-            local resource=$1
-            local id=$2
-            local max_attempts=3
-            local attempt=1
-            
-            while [ $attempt -le $max_attempts ]; do
-              echo "Importing $resource (attempt $attempt/$max_attempts)..."
-              if terraform import "$resource" "$id"; then
-                echo "Successfully imported $resource"
-                return 0
-              fi
-              echo "Import failed, waiting before retry..."
-              sleep 5
-              attempt=$((attempt + 1))
-            done
-            
-            echo "Failed to import $resource after $max_attempts attempts"
-            return 1
-          }
-
-          # Import dataset
-          import_with_retry "google_bigquery_dataset.payroll_dataset" "${{ steps.auth.outputs.project_id }}:payroll_analytics"
-
-          # Import tables
-          for table in cpa_firms businesses employees pay_periods payroll_records deductions taxes employee_payroll_summary; do
-            import_with_retry "google_bigquery_table.$table" "${{ steps.auth.outputs.project_id }}.payroll_analytics.$table"
-          done
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-
+      # Format and validate
       - name: Terraform Format
         run: terraform fmt -check
 
       - name: Terraform Validate
         run: terraform validate
 
+      # Plan changes
       - name: Terraform Plan
-        run: |
-          terraform plan \
-            -var="db_password=${{ secrets.DB_PASSWORD }}" \
-            -out=tfplan
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        if: github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
+        run: terraform plan -out=tfplan
 
+      # Apply changes
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        if: github.event.inputs.action == 'apply' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
         run: |
           if ! terraform apply -auto-approve tfplan; then
             echo "Terraform apply failed. Initiating rollback..."
-            terraform destroy -auto-approve \
-              -var="db_password=${{ secrets.DB_PASSWORD }}"
+            terraform destroy -auto-approve
             exit 1
           fi
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Output Infrastructure Details
-        if: success()
+      # Destroy infrastructure
+      - name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
         run: |
-          echo "Cloud SQL Instance: $(terraform output -raw instance_connection_name)"
-          echo "Database Name: $(terraform output -raw database_name)"
-          echo "BigQuery Dataset: $(terraform output -raw bigquery_dataset_id)"
-          echo "Datastream ID: $(terraform output -raw datastream_stream_id)"
+          # First disable deletion protection
+          terraform apply -auto-approve \
+            -target=google_sql_database_instance.postgres \
+            -var="deletion_protection=false" || true
 
+          # Then destroy all resources
+          terraform destroy -auto-approve \
+            -var="deletion_protection=false"
+
+      # Output infrastructure details
+      - name: Output Infrastructure Details
+        if: success() && github.event.inputs.action != 'destroy'
+        run: |
+          if [ "${{ github.event.inputs.action }}" = "plan" ]; then
+            echo "=== Infrastructure Details (Plan) ==="
+            echo "Note: Outputs will be available after applying the changes"
+            echo "============================"
+            exit 0
+          fi
+
+          # Refresh the state to ensure we have the latest values
+          terraform refresh >/dev/null 2>&1 || true
+
+          # Function to safely get output
+          get_output() {
+            local output_name=$1
+            local display_name=$2
+            local value
+            if ! terraform state list >/dev/null 2>&1; then
+              printf "%-20s %s\n" "$display_name:" "No state file available"
+              return
+            fi
+            # Suppress all error messages and debug output, capture only the value
+            value=$(terraform output -raw "$output_name" 2>/dev/null || echo "NOT_SET")
+            if [ "$value" = "NOT_SET" ]; then
+              printf "%-20s %s\n" "$display_name:" "Not available yet"
+            else
+              # Clean up the value and ensure it's on one line
+              value=$(echo "$value" | sed 's/::debug::.*$//' | sed 's/::error::.*$//' | sed 's/\[command\].*$//' | tr -d '\n' | tr -d '\r')
+              printf "%-20s %s\n" "$display_name:" "$value"
+            fi
+          }
+
+          # Get all outputs
+          echo "=== Infrastructure Details ==="
+          get_output "instance_connection_name" "Connection Name"
+          get_output "postgres_private_ip" "Private IP"
+          get_output "database_name" "Database Name"
+          get_output "bigquery_dataset_id" "BigQuery Dataset"
+          get_output "datastream_stream_id" "Datastream ID"
+          get_output "environment" "Environment"
+          get_output "project_id" "Project ID"
+          get_output "region" "Region"
+          get_output "vpc_network_name" "VPC Network"
+          echo "============================"
+        env:
+          TF_LOG: "ERROR" # Override global TF_LOG for this step only
+
+      # Upload logs
       - name: Upload Terraform Logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: terraform-logs
+          name: terraform-logs-${{ github.event.inputs.environment || 'dev' }}
           path: terraform.log
           retention-days: 7
-
-      - name: Cleanup on Failure
-        if: failure()
-        run: |
-          echo "Cleaning up resources..."
-          terraform destroy -auto-approve \
-            -var="db_password=${{ secrets.DB_PASSWORD }}"
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}

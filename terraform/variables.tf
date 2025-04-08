@@ -10,6 +10,12 @@ variable "region" {
   default     = "us-central1"
 }
 
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
 variable "db_password" {
   description = "PostgreSQL user password"
   type        = string
