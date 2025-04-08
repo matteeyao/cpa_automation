@@ -15,3 +15,9 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "vpc_network" {
+  description = "The VPC network to use for Cloud SQL private IP"
+  type        = string
+  default     = "default"
+}
