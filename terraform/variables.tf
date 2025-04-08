@@ -19,5 +19,5 @@ variable "db_password" {
 variable "vpc_network" {
   description = "The VPC network to use for Cloud SQL private IP. This should be the full resource name of an existing VPC network (e.g., projects/PROJECT_ID/global/networks/NETWORK_NAME)"
   type        = string
-  default     = "default"
+  default     = "projects/sputter-455519/global/networks/default"
 }
