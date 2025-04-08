@@ -46,7 +46,7 @@ jobs:
       - name: Create State Bucket if Not Exists
         run: |
           gsutil ls -b gs://terraform-state-${GITHUB_REPOSITORY_OWNER} || \
-          gsutil mb -l ${GITHUB_REF##*/} gs://terraform-state-${GITHUB_REPOSITORY_OWNER}
+          gsutil mb -l us-central1 gs://terraform-state-${GITHUB_REPOSITORY_OWNER}
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
