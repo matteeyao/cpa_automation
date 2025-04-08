@@ -11,7 +11,7 @@ resource "google_sql_database_instance" "postgres" {
     }
 
     ip_configuration {
-      private_network = "projects/sputter-455519/global/networks/default"
+      private_network = "projects/${var.project_id}/global/networks/${var.vpc_network}"
     }
   }
 

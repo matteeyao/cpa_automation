@@ -1,0 +1,42 @@
+[
+  {
+    "name": "id",
+    "type": "INTEGER",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "business_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "start_date",
+    "type": "DATE",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "end_date",
+    "type": "DATE",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "pay_date",
+    "type": "DATE",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "description",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "updated_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED"
+  }
+]

@@ -9,6 +9,48 @@ resource "google_bigquery_dataset" "payroll_dataset" {
   ]
 }
 
+resource "google_bigquery_table" "cpa_firms" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "cpa_firms"
+  schema     = file("${path.module}/schemas/cpa_firms.json")
+}
+
+resource "google_bigquery_table" "businesses" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "businesses"
+  schema     = file("${path.module}/schemas/businesses.json")
+}
+
+resource "google_bigquery_table" "employees" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "employees"
+  schema     = file("${path.module}/schemas/employees.json")
+}
+
+resource "google_bigquery_table" "pay_periods" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "pay_periods"
+  schema     = file("${path.module}/schemas/pay_periods.json")
+}
+
+resource "google_bigquery_table" "payroll_records" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "payroll_records"
+  schema     = file("${path.module}/schemas/payroll_records.json")
+}
+
+resource "google_bigquery_table" "deductions" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "deductions"
+  schema     = file("${path.module}/schemas/deductions.json")
+}
+
+resource "google_bigquery_table" "taxes" {
+  dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
+  table_id   = "taxes"
+  schema     = file("${path.module}/schemas/taxes.json")
+}
+
 # BigQuery Views for Analytics
 resource "google_bigquery_table" "employee_payroll_summary" {
   dataset_id = google_bigquery_dataset.payroll_dataset.dataset_id
