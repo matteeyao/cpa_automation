@@ -18,9 +18,7 @@ resource "google_sql_database_instance" "postgres" {
   deletion_protection = false
 
   depends_on = [
-    google_project_service.cloudsql,
-    google_project_service.servicenetworking,
-    google_project_service.compute
+    google_project_service.cloudsql
   ]
 }
 
