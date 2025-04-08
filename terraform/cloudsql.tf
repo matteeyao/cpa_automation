@@ -11,7 +11,7 @@ resource "google_sql_database_instance" "postgres" {
     }
 
     ip_configuration {
-      private_network = "projects/${var.project_id}/global/networks/${var.vpc_network}"
+      private_network = google_compute_network.vpc.id
     }
   }
 
@@ -20,7 +20,8 @@ resource "google_sql_database_instance" "postgres" {
   depends_on = [
     google_project_service.cloudsql,
     google_project_service.servicenetworking,
-    google_project_service.compute
+    google_project_service.compute,
+    google_service_networking_connection.private_vpc_connection
   ]
 }
 

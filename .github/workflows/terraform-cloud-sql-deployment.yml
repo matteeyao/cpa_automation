@@ -21,6 +21,31 @@ jobs:
         with:
           terraform_version: 1.11.2
 
+      - name: Configure Terraform Backend
+        run: |
+          cat > backend.tf << EOF
+          terraform {
+            backend "gcs" {
+              bucket = "terraform-state-${GITHUB_REPOSITORY_OWNER}"
+              prefix = "terraform/state"
+            }
+          }
+          EOF
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Create State Bucket if Not Exists
+        run: |
+          gsutil ls -b gs://terraform-state-${GITHUB_REPOSITORY_OWNER} || \
+          gsutil mb -l ${GITHUB_REF##*/} gs://terraform-state-${GITHUB_REPOSITORY_OWNER}
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Enable Versioning on State Bucket
+        run: gsutil versioning set on gs://terraform-state-${GITHUB_REPOSITORY_OWNER}
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
       - name: Terraform Init
         run: terraform init
         env:
@@ -32,18 +57,29 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Create Workspace
+        run: |
+          terraform workspace new ${{ github.sha }} || terraform workspace select ${{ github.sha }}
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
       - name: Terraform Plan
         run: |
           terraform plan \
-            -var="db_password=${{ secrets.DB_PASSWORD }}"
+            -var="db_password=${{ secrets.DB_PASSWORD }}" \
+            -out=tfplan
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
-          terraform apply -auto-approve \
-            -var="db_password=${{ secrets.DB_PASSWORD }}"
+          terraform apply -auto-approve tfplan || {
+            echo "Terraform apply failed. Initiating rollback..."
+            terraform destroy -auto-approve \
+              -var="db_password=${{ secrets.DB_PASSWORD }}"
+            exit 1
+          }
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
@@ -54,3 +90,12 @@ jobs:
           echo "Database Name: $(terraform output -raw database_name)"
           echo "BigQuery Dataset: $(terraform output -raw bigquery_dataset_id)"
           echo "Datastream ID: $(terraform output -raw datastream_stream_id)"
+
+      - name: Cleanup on Failure
+        if: failure()
+        run: |
+          echo "Cleaning up resources..."
+          terraform destroy -auto-approve \
+            -var="db_password=${{ secrets.DB_PASSWORD }}"
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
