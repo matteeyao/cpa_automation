@@ -11,8 +11,13 @@ resource "google_datastream_connection_profile" "postgres_profile" {
     database = google_sql_database.database.name
   }
 
+  private_connectivity {
+    private_connection = google_service_networking_connection.private_vpc_connection.id
+  }
+
   depends_on = [
-    google_project_service.datastream
+    google_project_service.datastream,
+    google_service_networking_connection.private_vpc_connection
   ]
 }
 

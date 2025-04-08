@@ -60,17 +60,43 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
+      - name: Create and Select Workspace
+        run: |
+          # Create a unique workspace name using timestamp and commit SHA
+          WORKSPACE_NAME="deploy-$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}"
+          terraform workspace new $WORKSPACE_NAME || terraform workspace select $WORKSPACE_NAME
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Import Existing Resources
+        run: |
+          # Import BigQuery dataset with retry logic
+          for i in {1..3}; do
+            if terraform import google_bigquery_dataset.payroll_dataset ${PROJECT_ID}:payroll_analytics; then
+              break
+            fi
+            echo "Import attempt $i failed, waiting before retry..."
+            sleep 5
+          done || true
+
+          # Import BigQuery tables with retry logic
+          for table in cpa_firms businesses employees pay_periods payroll_records deductions taxes employee_payroll_summary; do
+            for i in {1..3}; do
+              if terraform import google_bigquery_table.$table ${PROJECT_ID}.payroll_analytics.$table; then
+                break
+              fi
+              echo "Import attempt $i failed for table $table, waiting before retry..."
+              sleep 5
+            done || true
+          done
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
       - name: Terraform Format
         run: terraform fmt -check
 
       - name: Terraform Validate
         run: terraform validate
-
-      - name: Create Workspace
-        run: |
-          terraform workspace new ${{ github.sha }} || terraform workspace select ${{ github.sha }}
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Terraform Plan
         run: |
