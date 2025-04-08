@@ -1,3 +1,12 @@
+# This file is intentionally left empty as the configuration has been split into multiple files:
+# - providers.tf: Provider configuration
+# - apis.tf: API enablement
+# - cloudsql.tf: Cloud SQL configuration
+# - bigquery.tf: BigQuery configuration
+# - datastream.tf: Datastream configuration
+# - variables.tf: Input variables
+# - outputs.tf: Output values
+
 provider "google" {
   project = var.project_id
   region  = var.region

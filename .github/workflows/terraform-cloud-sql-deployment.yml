@@ -1,16 +1,16 @@
-name: "Terraform Cloud SQL Deployment"
+name: "Terraform Infrastructure Deployment"
 
 on:
   workflow_dispatch:
 
 jobs:
   terraform:
-    name: "Deploy Cloud SQL"
+    name: "Deploy Infrastructure"
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./terraform       
+        working-directory: ./terraform
 
     steps:
       - name: Checkout
@@ -33,13 +33,26 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan
+        run: |
+          terraform plan \
+            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        run: |
+          terraform apply -auto-approve \
+            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD }}"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+
+      - name: Output Infrastructure Details
+        if: success()
+        run: |
+          echo "Cloud SQL Instance: $(terraform output -raw instance_connection_name)"
+          echo "Database Name: $(terraform output -raw database_name)"
+          echo "BigQuery Dataset: $(terraform output -raw bigquery_dataset_id)"
+          echo "Datastream ID: $(terraform output -raw datastream_stream_id)"
