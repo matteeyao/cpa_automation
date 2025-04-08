@@ -35,7 +35,6 @@ jobs:
       - name: Terraform Plan
         run: |
           terraform plan \
-            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
@@ -44,7 +43,6 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
           terraform apply -auto-approve \
-            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
             -var="db_password=${{ secrets.DB_PASSWORD }}"
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
