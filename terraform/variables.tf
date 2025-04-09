@@ -22,12 +22,6 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "datastream_password" {
-  description = "Password for the Datastream user"
-  type        = string
-  sensitive   = true
-}
-
 variable "vpc_network" {
   description = "The name of the VPC network to create for Cloud SQL private IP"
   type        = string

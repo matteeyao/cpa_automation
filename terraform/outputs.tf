@@ -13,11 +13,6 @@ output "bigquery_dataset_id" {
   description = "The ID of the BigQuery dataset"
 }
 
-output "datastream_stream_id" {
-  value       = google_datastream_stream.postgres_to_bigquery.stream_id
-  description = "The ID of the Datastream stream"
-}
-
 output "postgres_private_ip" {
   value       = google_sql_database_instance.postgres.private_ip_address
   description = "Private IP address of the Cloud SQL instance"

@@ -79,16 +79,3 @@ resource "google_bigquery_table" "employee_payroll_summary" {
 
   labels = local.common_tags
 }
-
-# Cloud Resource Connection for BigQuery
-resource "google_bigquery_connection" "cloud_resource_connection" {
-  connection_id = "cloud-resource-connection"
-  location      = var.region
-  cloud_resource {}
-}
-
-resource "google_project_iam_member" "connection_permission" {
-  project = var.project_id
-  role    = "roles/storage.objectViewer"
-  member  = "serviceAccount:${google_bigquery_connection.cloud_resource_connection.cloud_resource[0].service_account_id}"
-}
