@@ -6,6 +6,11 @@ resource "google_sql_database_instance" "postgres" {
   settings {
     tier = "db-f1-micro"
 
+    database_flags {
+      name  = "cloudsql.logical_decoding"
+      value = "on"
+    }
+
     backup_configuration {
       enabled                        = true
       point_in_time_recovery_enabled = true
@@ -17,6 +22,9 @@ resource "google_sql_database_instance" "postgres" {
 
     ip_configuration {
       private_network = google_compute_network.vpc.id
+      # Enable private IP
+      ipv4_enabled = false
+      ssl_mode     = "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
     }
 
     insights_config {
@@ -54,4 +62,23 @@ resource "google_sql_user" "user" {
   name     = "postgres"
   instance = google_sql_database_instance.postgres.name
   password = var.db_password
+}
+
+resource "google_sql_user" "datastream_user" {
+  name     = "datastream_user"
+  instance = google_sql_database_instance.postgres.name
+  password = var.datastream_password
+}
+
+resource "null_resource" "setup_postgres_replication" {
+  depends_on = [google_sql_database_instance.postgres, google_sql_user.datastream_user]
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      # Connect to the database and set up replication
+      PGPASSWORD=${google_sql_user.datastream_user.password} psql -h ${google_compute_instance.sql_proxy.network_interface[0].network_ip} -U ${google_sql_user.datastream_user.name} -d ${google_sql_database.database.name} -c "ALTER USER ${google_sql_user.datastream_user.name} WITH REPLICATION;"
+      PGPASSWORD=${google_sql_user.datastream_user.password} psql -h ${google_compute_instance.sql_proxy.network_interface[0].network_ip} -U ${google_sql_user.datastream_user.name} -d ${google_sql_database.database.name} -c "CREATE PUBLICATION datastream_publication FOR ALL TABLES;"
+      PGPASSWORD=${google_sql_user.datastream_user.password} psql -h ${google_compute_instance.sql_proxy.network_interface[0].network_ip} -U ${google_sql_user.datastream_user.name} -d ${google_sql_database.database.name} -c "SELECT PG_CREATE_LOGICAL_REPLICATION_SLOT('datastream_replication_slot', 'pgoutput');"
+    EOT
+  }
 }

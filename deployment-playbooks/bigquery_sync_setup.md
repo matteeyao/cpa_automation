@@ -44,6 +44,8 @@
 
 - [x] Compute Network Admin (`roles/compute.networkAdmin`)
 
+- [x] Compute Security Admin (`roles/compute.securityAdmin`)
+
 ## Step 3: Further Enhancements
 
 1. **Scheduled Queries**: The configuration doesn't include BigQuery scheduled queries for data transformation. You should add:

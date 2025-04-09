@@ -4,21 +4,9 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.0"
-    }
-
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "~> 4.0"
+      version = ">= 6.25.0"
     }
   }
-
-  # Configure backend for state storage
-  # This is commented out as it's typically configured in CI/CD
-  # backend "gcs" {
-  #   bucket = "terraform-state-bucket"
-  #   prefix = "terraform/state"
-  # }
 }
 
 provider "google" {

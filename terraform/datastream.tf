@@ -6,8 +6,8 @@ resource "google_datastream_connection_profile" "postgres_profile" {
   postgresql_profile {
     hostname = google_sql_database_instance.postgres.private_ip_address
     port     = 5432
-    username = google_sql_user.user.name
-    password = var.db_password
+    username = google_sql_user.datastream_user.name
+    password = var.datastream_password
     database = google_sql_database.database.name
   }
 
@@ -73,6 +73,10 @@ resource "google_datastream_stream" "postgres_to_bigquery" {
     destination_connection_profile = google_datastream_connection_profile.bigquery_profile.id
     bigquery_destination_config {
       data_freshness = "900s" # 15 minutes
+
+      single_target_dataset {
+        dataset_id = local.bigquery_dataset_id
+      }
       source_hierarchy_datasets {
         dataset_template {
           location = var.region
