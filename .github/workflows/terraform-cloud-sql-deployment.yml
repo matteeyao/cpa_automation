@@ -36,7 +36,8 @@ env:
   STATE_BUCKET: terraform-state-${{ github.repository_owner }}
   # Common Terraform variables
   TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
-  TF_VAR_datastream_password: ${{ secrets.DATASTREAM_PASSWORD }}
+  # Set deletion protection based on environment
+  TF_VAR_deletion_protection: ${{ github.event.inputs.environment == 'prod' && 'true' || 'false' }}
   # Common environment variables for all steps
   GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
   TF_IN_AUTOMATION: "true"
@@ -179,7 +180,6 @@ jobs:
           get_output "postgres_private_ip" "Private IP"
           get_output "database_name" "Database Name"
           get_output "bigquery_dataset_id" "BigQuery Dataset"
-          get_output "datastream_stream_id" "Datastream ID"
           get_output "environment" "Environment"
           get_output "project_id" "Project ID"
           get_output "region" "Region"

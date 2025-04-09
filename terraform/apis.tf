@@ -1,6 +1,5 @@
 locals {
   required_apis = {
-    datastream           = "datastream.googleapis.com"
     bigquery             = "bigquery.googleapis.com"
     cloudsql             = "sqladmin.googleapis.com"
     compute              = "compute.googleapis.com"

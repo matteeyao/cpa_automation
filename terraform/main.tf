@@ -4,7 +4,6 @@
 # Components:
 # - Cloud SQL (PostgreSQL) for transactional data
 # - BigQuery for analytics and reporting
-# - Datastream for CDC (Change Data Capture) from Cloud SQL to BigQuery
 # - VPC networking for secure connectivity
 #
 # File Structure:
@@ -16,7 +15,6 @@
 # - networking.tf: VPC and networking configuration
 # - cloudsql.tf: Cloud SQL configuration
 # - bigquery.tf: BigQuery configuration
-# - datastream.tf: Datastream configuration
 # - outputs.tf: Output values
 #
 # Usage:
@@ -32,7 +30,6 @@
 # - apis.tf: API enablement
 # - cloudsql.tf: Cloud SQL configuration
 # - bigquery.tf: BigQuery configuration
-# - datastream.tf: Datastream configuration
 # - variables.tf: Input variables
 # - outputs.tf: Output values
 

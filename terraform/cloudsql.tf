@@ -41,7 +41,7 @@ resource "google_sql_database_instance" "postgres" {
     }
   }
 
-  deletion_protection = var.environment == "prod" ? true : false
+  deletion_protection = var.deletion_protection
 
   depends_on = [
     google_project_service.apis["cloudsql"],
@@ -62,23 +62,4 @@ resource "google_sql_user" "user" {
   name     = "postgres"
   instance = google_sql_database_instance.postgres.name
   password = var.db_password
-}
-
-resource "google_sql_user" "datastream_user" {
-  name     = "datastream_user"
-  instance = google_sql_database_instance.postgres.name
-  password = var.datastream_password
-}
-
-resource "null_resource" "setup_postgres_replication" {
-  depends_on = [google_sql_database_instance.postgres, google_sql_user.datastream_user]
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      # Connect to the database and set up replication
-      PGPASSWORD=${google_sql_user.datastream_user.password} psql -h ${google_compute_instance.sql_proxy.network_interface[0].network_ip} -U ${google_sql_user.datastream_user.name} -d ${google_sql_database.database.name} -c "ALTER USER ${google_sql_user.datastream_user.name} WITH REPLICATION;"
-      PGPASSWORD=${google_sql_user.datastream_user.password} psql -h ${google_compute_instance.sql_proxy.network_interface[0].network_ip} -U ${google_sql_user.datastream_user.name} -d ${google_sql_database.database.name} -c "CREATE PUBLICATION datastream_publication FOR ALL TABLES;"
-      PGPASSWORD=${google_sql_user.datastream_user.password} psql -h ${google_compute_instance.sql_proxy.network_interface[0].network_ip} -U ${google_sql_user.datastream_user.name} -d ${google_sql_database.database.name} -c "SELECT PG_CREATE_LOGICAL_REPLICATION_SLOT('datastream_replication_slot', 'pgoutput');"
-    EOT
-  }
 }

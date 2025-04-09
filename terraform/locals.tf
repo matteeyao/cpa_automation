@@ -17,18 +17,4 @@ locals {
 
   # VPC network
   vpc_network_name = "${local.name_prefix}-vpc"
-
-  # Datastream
-  datastream_name = "${local.name_prefix}-stream"
-
-  # Tables to sync via Datastream
-  datastream_tables = [
-    "cpa_firms",
-    "businesses",
-    "employees",
-    "pay_periods",
-    "payroll_records",
-    "deductions",
-    "taxes"
-  ]
 }
